@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  react_app:
+    build: .
+    container_name: react_frontend
+    ports:
+      - "3000:3000"  # Ánh xạ cổng 3000 ra ngoài máy thật
+    volumes:
+      - .:/app       # Đồng bộ code từ máy thật vào container
+      - /app/node_modules # Giữ thư viện node_modules riêng cho container để tránh lỗi Windows
+    environment:
+      - CHOKIDAR_USEPOLLING=true # Giúp Docker trên Windows nhận biết thay đổi code nhanh hơn
