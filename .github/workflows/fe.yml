@@ -1,0 +1,40 @@
+name: Deploy Frontend React to Somee
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Project_React/**' # Chỉ chạy khi sửa code React
+
+jobs:
+  deploy-frontend:
+    name: 🎉 Deploy Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Lấy code mới nhất
+        uses: actions/checkout@v4
+
+      - name: 🟢 Cài đặt Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: 🔨 Build React
+        run: |
+          cd Project_React
+          npm install
+          npm run build
+
+      - name: 📂 Upload lên Somee qua FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          # Dùng chung bộ chìa khóa với Backend (không cần tạo mới)
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          
+          # Lấy code đã build trong thư mục dist
+          local-dir: ./Project_React/dist/
+          
+          # QUAN TRỌNG: Đẩy vào thư mục con "frontend" để không mất code Laravel
+          server-dir: /www.thangdeploy2025.somee.com/frontend/
