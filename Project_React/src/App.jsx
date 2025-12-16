@@ -8,7 +8,7 @@ function App() {
 
   useEffect(() => {
     // React (3000) gọi sang Laravel (8080)
-    fetch('http://localhost:8080/api/hello')
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/hello`)
       .then(response => response.json())
       .then(json => setData(json.message))
       .catch(error => {
