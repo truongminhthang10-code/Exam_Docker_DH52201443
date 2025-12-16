@@ -13,11 +13,12 @@ RUN apt-get update && apt-get install -y \
     curl \
     libonig-dev \
     libzip-dev \
-    libgd-dev
+    libgd-dev \
+    libpq-dev
 
 # 2. Cài đặt PHP Extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl gd
+RUN docker-php-ext-install pdo_mysql pdo_pgsql mbstring zip exif pcntl gd
 
 # 3. Cài đặt Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
