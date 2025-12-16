@@ -1,0 +1,34 @@
+name: Deploy Laravel to Somee
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Project_Laravel/**' # Chỉ chạy khi sửa code Laravel
+
+jobs:
+  deploy:
+    name: 🎉 Deploy Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Lấy code mới nhất
+        uses: actions/checkout@v4
+
+      # Cài đặt thư viện PHP (Vendor) để code chạy được ngay
+      - name: 🔨 Install Dependencies
+        run: |
+          cd Project_Laravel
+          composer install --no-dev --optimize-autoloader
+
+      - name: 📂 Upload lên Somee qua FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          
+          # Folder chứa code Laravel dưới máy bạn
+          local-dir: ./Project_Laravel/
+          
+          # Folder đích trên Somee (Lấy chính xác từ hình bạn gửi)
+          server-dir: /www.thangdeploy2025.somee.com/
